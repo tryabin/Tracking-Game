@@ -1,15 +1,14 @@
-import random
 import math
+import random
 import sys
+import win32api
+
 import pyglet
 from pyglet.gl import *
 from pyglet.window import key, mouse
 
 import primitives
 import utils
-
-
-
 
 
 class PrimaryWindow(pyglet.window.Window):
@@ -38,12 +37,14 @@ class PrimaryWindow(pyglet.window.Window):
 
     mousePressed = False
     paused = True
+    firstFrame = False
 
     def __init__(self):
         super(PrimaryWindow, self).__init__(config=self.smoothConfig)
         self.set_caption('Tracking Game')
         self.set_fullscreen(True)
         self.set_exclusive_mouse(True)
+        win32api.SetCursorPos((int(self.screenWidth / 2), int(self.screenHeight / 2)))
 
         glEnable(GL_BLEND)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
@@ -58,6 +59,10 @@ class PrimaryWindow(pyglet.window.Window):
 
         pyglet.clock.schedule_interval(self.update, 1.0/self.FPS)
         pyglet.app.run()
+
+
+
+
 
 
 
@@ -96,6 +101,12 @@ class PrimaryWindow(pyglet.window.Window):
             
 
     def update(self, dt):
+
+        # Move the mouse slightly to make it disappear to work around a bug.
+        if not self.firstFrame:
+            win32api.SetCursorPos((int(self.screenWidth / 2)+1, int(self.screenHeight / 2)))
+            self.firstFrame = True
+
 
         if self.paused:
             return
