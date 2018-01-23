@@ -43,7 +43,7 @@ class PrimaryWindow(pyglet.window.Window):
         super(PrimaryWindow, self).__init__(config=self.smoothConfig)
         self.set_caption('Tracking Game')
         self.set_fullscreen(True)
-        self.set_exclusive_mouse(True)
+        self.set_mouse_visible(False)
         win32api.SetCursorPos((int(self.screenWidth / 2), int(self.screenHeight / 2)))
 
         glEnable(GL_BLEND)
