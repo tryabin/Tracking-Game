@@ -40,9 +40,9 @@ class PrimaryWindow(pyglet.window.Window):
     firstFrame = False
 
     def __init__(self):
-        super(PrimaryWindow, self).__init__(config=self.smoothConfig)
+        super(PrimaryWindow, self).__init__(config=self.smoothConfig, style=pyglet.window.Window.WINDOW_STYLE_BORDERLESS)
         self.set_caption('Tracking Game')
-        self.set_fullscreen(True)
+        self.set_size(self.screenWidth, self.screenHeight)
         self.set_mouse_visible(False)
         win32api.SetCursorPos((int(self.screenWidth / 2), int(self.screenHeight / 2)))
 
@@ -53,7 +53,7 @@ class PrimaryWindow(pyglet.window.Window):
 
         self.accuracyLabel = pyglet.text.Label(font_name='Times New Roman',
                                                font_size=36,
-                                               x=self.width/2, y=500,
+                                               x=self.screenWidth/2, y=self.screenHeight/2 - 100,
                                                anchor_x='center', anchor_y='center')
 
 
