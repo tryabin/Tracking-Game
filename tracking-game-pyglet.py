@@ -37,7 +37,7 @@ class PrimaryWindow(pyglet.window.Window):
 
     mousePressed = False
     paused = True
-    firstFrame = False
+    firstFrameRendered = False
 
     def __init__(self):
         super(PrimaryWindow, self).__init__(config=self.smoothConfig, style=pyglet.window.Window.WINDOW_STYLE_BORDERLESS)
@@ -62,10 +62,6 @@ class PrimaryWindow(pyglet.window.Window):
 
 
 
-
-
-
-
     def on_draw(self):
         self.clear()
         self.target.render()
@@ -73,8 +69,12 @@ class PrimaryWindow(pyglet.window.Window):
         self.accuracyLabel.draw()
 
     def on_mouse_motion(self, x, y, dx, dy):
-        self.target.x -= dx
-        self.target.y -= dy
+
+        # Don't capture mouse motion data until after the first frame has been rendered to ignore the mouse position
+        # change when the cursor is moved to the middle of the screen.
+        if self.firstFrameRendered:
+            self.target.x -= dx
+            self.target.y -= dy
 
     def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
         self.target.x -= dx
@@ -98,18 +98,18 @@ class PrimaryWindow(pyglet.window.Window):
         if symbol == key.ESCAPE:
             sys.exit(0)
 
-            
 
     def update(self, dt):
 
-        # Move the mouse slightly to make it disappear to work around a bug.
-        if not self.firstFrame:
-            win32api.SetCursorPos((int(self.screenWidth / 2)+1, int(self.screenHeight / 2)))
-            self.firstFrame = True
+        # Set the flag indicating that the first frame has been rendered.
+        if not self.firstFrameRendered:
+            self.firstFrameRendered = True
 
 
+        # Do nothing if the game is paused.
         if self.paused:
             return
+
 
         # Change the target's direction if it reached its destination.
         if self.targetVelocityX > 0 and self.targetVirtualPositionX > self.targetDestinationPositionX:
