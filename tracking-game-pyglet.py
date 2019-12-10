@@ -2,6 +2,7 @@ import math
 import random
 import sys
 import win32api
+from win32api import GetSystemMetrics
 
 import pyglet
 from pyglet.gl import *
@@ -18,8 +19,8 @@ class PrimaryWindow(pyglet.window.Window):
     smoothConfig = utils.get_smooth_config()
     scoreHistoryFile = 'score_history.txt'
 
-    screenWidth = pyglet.window.get_platform().get_default_display().get_default_screen().width
-    screenHeight = pyglet.window.get_platform().get_default_display().get_default_screen().height
+    screenWidth = GetSystemMetrics(0)
+    screenHeight = GetSystemMetrics(1)
 
     trackAreaWidthPixels = 100
     targetRadiusPixels = 20
@@ -46,8 +47,6 @@ class PrimaryWindow(pyglet.window.Window):
         self.set_mouse_visible(False)
         win32api.SetCursorPos((int(self.screenWidth / 2), int(self.screenHeight / 2)))
 
-        glEnable(GL_BLEND)
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
         self.target = primitives.Circle(self.screenWidth / 2, self.screenHeight / 2, width=self.targetRadiusPixels * 2, color=self.targetColor)
         self.cursor = primitives.Circle(self.screenWidth/2, self.screenHeight/2, width=self.cursorRadiusPixels*2, color=self.cursorColor)
 
