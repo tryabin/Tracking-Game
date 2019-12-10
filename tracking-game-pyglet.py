@@ -22,16 +22,17 @@ class PrimaryWindow(pyglet.window.Window):
     screenWidth = GetSystemMetrics(0)
     screenHeight = GetSystemMetrics(1)
 
+    # Parameters describing how the target moves.
     trackAreaWidthPixels = 100
     targetRadiusPixels = 20
     targetVelocityX = 2
-    targetColor = (0, 128/255, 255/255, 1)
     targetVirtualPositionX = trackAreaWidthPixels/2
     targetDestinationPositionX = 0
     targetDestinationMinimumDistance = 10
 
     cursorRadiusPixels = 5
     cursorColor = (255/255, 0, 0, 1)
+    targetColor = (0, 128/255, 255/255, 1)
 
     hitCount = 0
     totalFrames = 0
