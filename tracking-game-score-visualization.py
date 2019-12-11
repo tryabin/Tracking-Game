@@ -17,7 +17,7 @@ def main():
     scores = scores[scores > minThreshold]
 
     # Compute the number of scores that are to be averaged per point.
-    binSize = int(len(scores) / numberOfPointsToPlot)
+    binSize = max(int(len(scores) / numberOfPointsToPlot), 1)
 
 
     # Compute the points to plot.
