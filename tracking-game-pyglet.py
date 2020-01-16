@@ -3,6 +3,7 @@ import random
 import sys
 import win32api
 from win32api import GetSystemMetrics
+from PyQt5.QtWidgets import QApplication
 
 import pyglet
 from pyglet.gl import *
@@ -22,15 +23,20 @@ class PrimaryWindow(pyglet.window.Window):
     screenWidth = GetSystemMetrics(0)
     screenHeight = GetSystemMetrics(1)
 
+    # Get the screen DPI to support high-DPI screens.
+    app = QApplication(sys.argv)
+    screen = app.screens()[0]
+    dpi = screen.physicalDotsPerInch()
+
     # Parameters describing how the target moves.
-    trackAreaWidthPixels = 100
-    targetRadiusPixels = 20
-    targetVelocityX = 2
+    trackAreaWidthPixels = 1.0625*dpi
+    targetRadiusPixels = .2125*dpi
+    targetVelocityX = .02125*dpi
     targetVirtualPositionX = trackAreaWidthPixels/2
     targetDestinationPositionX = 0
     targetDestinationMinimumDistance = 10
 
-    cursorRadiusPixels = 5
+    cursorRadiusPixels = .053129*dpi
     cursorColor = (255/255, 0, 0, 1)
     targetColor = (0, 128/255, 255/255, 1)
 
@@ -46,20 +52,18 @@ class PrimaryWindow(pyglet.window.Window):
         self.set_caption('Tracking Game')
         self.set_size(self.screenWidth, self.screenHeight)
         self.set_mouse_visible(False)
-        win32api.SetCursorPos((int(self.screenWidth / 2), int(self.screenHeight / 2)))
+        win32api.SetCursorPos((int(self.screenWidth/2), int(self.screenHeight/2)))
 
-        self.target = primitives.Circle(self.screenWidth / 2, self.screenHeight / 2, width=self.targetRadiusPixels * 2, color=self.targetColor)
+        self.target = primitives.Circle(self.screenWidth/2, self.screenHeight/2, width=self.targetRadiusPixels*2, color=self.targetColor)
         self.cursor = primitives.Circle(self.screenWidth/2, self.screenHeight/2, width=self.cursorRadiusPixels*2, color=self.cursorColor)
 
         self.accuracyLabel = pyglet.text.Label(font_name='Times New Roman',
-                                               font_size=36,
-                                               x=self.screenWidth/2, y=self.screenHeight/2 - 100,
+                                               font_size=.3825*self.dpi,
+                                               x=self.screenWidth/2, y=self.screenHeight/2 - 1.0625*self.dpi,
                                                anchor_x='center', anchor_y='center')
-
 
         pyglet.clock.schedule_interval(self.update, 1.0/self.FPS)
         pyglet.app.run()
-
 
 
     def on_draw(self):
@@ -105,7 +109,6 @@ class PrimaryWindow(pyglet.window.Window):
         if not self.firstFrameRendered:
             self.firstFrameRendered = True
 
-
         # Do nothing if the game is paused.
         if self.paused:
             return
@@ -120,7 +123,6 @@ class PrimaryWindow(pyglet.window.Window):
             self.targetVelocityX *= -1
             self.targetDestinationPositionX = (self.trackAreaWidthPixels - self.targetVirtualPositionX - self.targetDestinationMinimumDistance)*random.random() + self.targetVirtualPositionX + self.targetDestinationMinimumDistance
 
-
         # Move the target.
         self.target.x += self.targetVelocityX
         self.targetVirtualPositionX += self.targetVelocityX
@@ -129,10 +131,9 @@ class PrimaryWindow(pyglet.window.Window):
         if self.mousePressed and math.sqrt(pow(self.target.x - self.cursor.x, 2) + pow(self.target.y - self.cursor.y, 2)) < self.targetRadiusPixels:
             self.hitCount += 1
         
-        self.totalFrames += 1
-
 
         # End the game once the time limit is reached.
+        self.totalFrames += 1
         if self.totalFrames / self.FPS > self.timeLimitSeconds:
             self.paused = True
             accuracyStr = str(round(self.hitCount/self.totalFrames*100, 2))
@@ -141,7 +142,6 @@ class PrimaryWindow(pyglet.window.Window):
 
             self.hitCount = 0
             self.totalFrames = 0
-
 
 
 
