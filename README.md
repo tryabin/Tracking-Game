@@ -10,4 +10,4 @@ A simple game that can be used to improve your ability to track an object with t
 * The goal is to keep the small red circle, representing the mouse cursor, inside the bigger blue circle while the LEFT mouse button is held down. 
 * The bigger red circle will move left to right randomly. 
 * The mouse control is inverted, to mimic how a target would move in an FPS game. 
-* After 5 seconds, the game pauses and a score id displayed, representing the percentage of frames when the target was hit. The score is also recorded in a file called "score_history.txt"
+* After 5 seconds, the game pauses and a score is displayed, representing the percentage of frames when the target was hit. The score is also recorded in a file called "score_history.txt"
